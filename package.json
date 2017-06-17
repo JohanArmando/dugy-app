@@ -1,0 +1,44 @@
+{
+  "name": "MrDoggy",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^0.16.1",
+    "moment": "^2.18.1",
+    "react": "15.4.2",
+    "react-native": "0.42.0",
+    "react-native-datepicker": "^1.5.1",
+    "react-native-dropdown": "0.0.6",
+    "react-native-form": "^2.1.2",
+    "react-native-google-places-autocomplete": "^1.2.12",
+    "react-native-image-crop-picker": "^0.13.1",
+    "react-native-image-picker": "^0.26.3",
+    "react-native-lightbox": "^0.6.0",
+    "react-native-maps": "^0.15.2",
+    "react-native-push-notification": "^2.2.1",
+    "react-native-router-flux": "3.38.0",
+    "react-native-scrollable-tab-view": "^0.6.6",
+    "react-native-store": "^0.4.1",
+    "react-native-svg-elements": "0.0.21",
+    "react-native-vector-icons": "^4.0.0",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0",
+    "redux-storage": "^4.1.2",
+    "redux-storage-engine-localstorage": "^1.1.4",
+    "sails.io.js": "^1.1.12",
+    "socket.io-client": "^2.0.1"
+  },
+  "devDependencies": {
+    "babel-jest": "19.0.0",
+    "babel-preset-react-native": "1.9.1",
+    "jest": "19.0.2",
+    "react-test-renderer": "15.4.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
