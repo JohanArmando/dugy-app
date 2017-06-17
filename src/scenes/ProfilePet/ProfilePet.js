@@ -1,184 +1,593 @@
 import React, { Component } from 'react';
-import { View, Text, ListView, StyleSheet, ScrollView, ToolbarAndroid, TouchableNativeFeedback, StatusBar, Image } from 'react-native';
+import { View, Animated, ActivityIndicator, DatePickerAndroid, Text, ToastAndroid, TouchableHighlight, ScrollView, Alert, ToolbarAndroid, Picker, Image,TouchableNativeFeedback, StatusBar, StyleSheet, TextInput } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import DrawerLayout from '../../redux/containers/DrawerContainer'
-import ActionButton from '../../components/ActionButton/ActionButton'
-import CaurruselItem from '../../components/CaurruselItem/CaurruselItem'
+import ImagePicker from 'react-native-image-crop-picker'
+import DatePicker from 'react-native-datepicker';
+import { getPets, storePet } from '../../services/petsServices';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-var utilities = require('../../assets/css/utilities');
 import moment from 'moment';
+import Dimensions from 'Dimensions';
+const {width, height} = Dimensions.get('window');
 require('moment/locale/es.js');
 
+var utilities = require('../../assets/css/utilities');
 
-export default class Profile extends Component {
-  constructor(){
+// More info on all the options is below in the README...just some common use cases shown here
+var options = {
+  title: null,
+  cancelButtonTitle: 'Cancelar',
+  takePhotoButtonTitle: 'Desde la camara',
+  chooseFromLibraryButtonTitle: 'Desde la galeria',
+  storageOptions: {
+    skipBackup: true,
+    path: 'images'
+  }
+};
+
+
+
+export default class Home extends Component {
+
+  constructor(props) {
     super();
     this.state = {
-      translucent: true,
-      colorBar: 'rgba(0,0,0,0.5)'
+      name: props.pet.name,
+      race: props.pet.race.id,
+      size: props.pet.size.id,
+      avatar: props.pet.photos[0].thumbnail,
+      date: props.pet.born_date,
+      text: props.pet.comments,
+      gender: 1,
+      modalType: 'race',
+      openModal: true,
+      opacity: new Animated.Value(0),
+      height: new Animated.Value(0),
+      width: new Animated.Value(0),
+      slide: new Animated.Value(-500),
+      loading: false,
+      avatarSource: props.pet.photos[0].thumbnail,
+      races: [{
+        id: 1,
+        name: 'ninguna'
+      }],
+      sizes: [{
+        id: 1,
+        name: 'ninguna'
+      }]
+    };
+    this.opacityInterpolate = this.state.opacity.interpolate({
+        inputRange: [0,100],
+        outputRange: [0,1]
+    });
+  }
+
+  /**
+   * The first arg is the options object for customization (it can also be null or omitted for default options),
+   * The second arg is the callback which sends object: response (more info below in README)
+   */
+  selectAvatar () {
+
+    ImagePicker.openPicker({
+      width: 800,
+      height: 800,
+      includeBase64: true,
+      cropping: true
+    }).then(response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        //let source = { uri: response.uri };
+
+        // You can also display the image using data:
+        let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        console.log(response)
+        this.setState({
+          avatarSource: source.uri
+        });
+      }
+    });
+  }
+  showModal()
+  {
+    if (this.state.openModal) {
+      Animated.sequence([
+        Animated.timing(this.state.width, {
+          toValue: width,
+          duration: 0
+        }),
+        Animated.timing(this.state.opacity, {
+          toValue: 100,
+          duration: 250
+        })
+      ]).start();
+      Animated.timing(this.state.slide, {
+        toValue: 0,
+        duration: 250
+      }).start();
+
+
+    } else {
+      Animated.sequence([
+        Animated.timing(this.state.opacity, {
+          toValue: 0,
+          duration: 250
+        }),
+        Animated.timing(this.state.width, {
+          toValue: 0,
+          duration: 0
+        })
+      ]).start();
+      Animated.timing(this.state.slide, {
+        toValue: -500,
+        duration: 250
+      }).start();
+    }
+    this.setState({openModal: !this.state.openModal});
+  }
+  selectAvatar2 () {
+
+    ImagePicker.openCamera({
+      width: 800,
+      height: 800,
+      includeBase64: true,
+      cropping: true
+    }).then(response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      }
+      else {
+        //let source = { uri: response.uri };
+
+        // You can also display the image using data:
+        let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        console.log(response)
+        this.setState({
+          avatarSource: source.uri
+        });
+      }
+    });
+  }
+
+  sendPet () {
+
+    if (this.state.name == '') {
+      ToastAndroid.show('Debe colocar el nombre de la mascota', ToastAndroid.SHORT);
+    } else if (this.state.date == '') {
+      ToastAndroid.show('Debe colocar la fecha de nacimiento de la mascota', ToastAndroid.SHORT);
+    } else if (this.state.avatarSource == '') {
+      ToastAndroid.show('Debe colocar una foto de la mascota', ToastAndroid.SHORT);
+    } else if (this.state.race == '') {
+      ToastAndroid.show('Debe colocar la raza de la mascota', ToastAndroid.SHORT);
+    } else if (this.state.size == '') {
+      ToastAndroid.show('Debe colocar el tamaño de la mascota', ToastAndroid.SHORT);
+    } else {
+      data = {
+        name: this.state.name,
+        race: this.state.race,
+        size: this.state.size,
+        comments: this.state.text,
+        avatar: this.state.avatarSource,
+        born_date: moment.utc(moment(this.state.date).format()).format(),
+        id: this.props.user.id
+      };
+      this.setState({
+        loading: true
+      });
+      storePet(data)
+      .then(pet => {
+        getPets()
+        .then((data) => {
+          this.populatePets(data);
+          ToastAndroid.show('mascota agregada', ToastAndroid.SHORT);
+          Actions.Home({type: 'reset'});
+        })
+        .catch(data => {
+          this.setState({
+            loading: false
+          });
+          ToastAndroid.show('No se pudo crear la mascota', ToastAndroid.SHORT);
+          console.log(data)
+        });
+        console.log('pet', pet)
+      })
     }
   }
+  modalRace () {
+    this.setState({modalType: 'race'});
+    this.showModal();
+  }
+  modalSize () {
+    this.setState({modalType: 'size'});
+    this.showModal();
+  }
+  modalGender () {
+    this.setState({modalType: 'gender'});
+    this.showModal();
+  }
+  // <ToolbarAndroid
+  //    style={utilities.toolbar}
+  //    title="Creando mascota..."
+  //    navIcon={require('../../assets/images/back.png')}
+  //    onActionSelected={this.sendPet.bind(this)}
+  //    titleColor="#FFF"
+  //    onIconClicked={Actions.pop}
+  //    elevation={1}/>
+
   render (){
-    var comments;
-    if (this.props.pet.comments == null || this.props.pet.comments == '') {
-      comments = 'Sin comentario';
+    var contentModal;
+    var age;
+    var raceName;
+    var sizeName;
+    var gender;
+    var genders = (
+      <View>
+        <TouchableNativeFeedback onPress={() => { this.setState({gender: 0}); this.showModal();}}>
+          <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, borderBottomWidth: 1, borderColor: '#EEF6F9'}}>
+            <Text style={{fontSize: 20, color: '#6d6d6d'}}>Macho</Text>
+          </View>
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => { this.setState({gender: 1}); this.showModal();}}>
+          <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
+            <Text style={{fontSize: 20, color: '#6d6d6d'}}>Hembra</Text>
+          </View>
+        </TouchableNativeFeedback>
+      </View>
+    );
+    if (this.state.gender == -1) {
+      gender = (
+        <Text style={{fontSize: 20, color: '#CCC'}}>Seleccionar sexo</Text>
+      );
+    } else if (this.state.gender == 0) {
+      gender = (
+        <Text style={{fontSize: 20, color: '#6d6d6d'}}>Macho</Text>
+      );
     } else {
-      comments = this.props.pet.comments;
+      gender = (
+        <Text style={{fontSize: 20, color: '#6d6d6d'}}>Hembra</Text>
+      );
     }
-    var age = moment().diff(this.props.pet.born_date, 'years');
-    if (age == 0) {
-      age = moment().diff(this.props.pet.born_date, 'months');
-      if (age > 1) {
-        age = age + ' meses';
+    raceName = this.props.races.filter(r => {
+      if (r.id == this.state.race) {
+        return r;
+      }
+    });
+    if (raceName.length == 0) {
+      raceName = (
+
+          <Text style={{fontSize: 20, color: '#CCC'}}>Seleccionar raza</Text>
+
+      );
+    } else {
+      raceName = (
+
+          <Text style={{fontSize: 20, color: '#6d6d6d'}}>{raceName[0].name}</Text>
+
+      );
+    }
+
+    sizeName = this.props.sizes.filter(r => {
+      if (r.id == this.state.size) {
+        return r;
+      }
+    });
+    if (sizeName.length == 0) {
+      sizeName = (
+        <Text style={{fontSize: 20, color: '#CCC'}}>Seleccionar tamaño</Text>
+      );
+    } else {
+      sizeName = (
+        <Text style={{fontSize: 20, color: '#6d6d6d'}}>{sizeName[0].name}</Text>
+      );
+    }
+
+
+    if (this.state.date != '') {
+      age = moment().diff(this.state.date, 'years');
+      if (age == 0) {
+        age = moment().diff(this.state.date, 'months');
+        if (age > 1) {
+          age = (
+            <Text style={{fontSize: 20, color: '#6d6d6d'}}>{age + ' meses'}</Text>
+          );
+        } else {
+          age = (
+            <Text style={{fontSize: 20, color: '#6d6d6d'}}>{age + ' mes'}</Text>
+          );
+        }
       } else {
-        age = age + ' mes';
+        if (age == 1) {
+          age = (
+            <Text style={{fontSize: 20, color: '#6d6d6d'}}>{age + ' año'}</Text>
+          );
+        } else {
+          age = (
+            <Text style={{fontSize: 20, color: '#6d6d6d'}}>{age + ' años'}</Text>
+          );
+        }
       }
     } else {
-      if (age == 1) {
-        age = age + ' año';
-      } else {
-        age = age + ' años';
-      }
+      age = (
+        <Text style={{fontSize: 20, color: '#ccc'}}>Agregar edad</Text>
+      );
     }
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    var source = ds.cloneWithRows([...this.props.pet.photos, {thumbnail: 'http://icon-icons.com/icons2/841/PNG/512/flat-style-circle-add_icon-icons.com_66944.png'}])
+    let races = this.state.races.map( (race, i) => {
+      return (
+        <View key={i}>
+          <Text>{race.name}</Text>
+        </View>
+      );
+
+    });
+
+    if (this.props.races.length > 0) {
+      races = this.props.races.map( (race, i) => {
+        if (i == 0) {
+          return (
+            <TouchableNativeFeedback key={i} onPress={() => { this.setState({race: race.id}); this.showModal();}}>
+              <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
+                <Text style={{fontSize: 20, color: '#6d6d6d'}}>{race.name}</Text>
+              </View>
+            </TouchableNativeFeedback>
+          );
+        }
+        return (
+          <TouchableNativeFeedback key={i} onPress={() => { this.setState({race: race.id}); this.showModal();}}>
+            <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, borderTopWidth: 1, borderColor: '#EEF6F9'}}>
+              <Text style={{fontSize: 20, color: '#6d6d6d'}}>{race.name}</Text>
+            </View>
+          </TouchableNativeFeedback>
+        );
+      });
+    }
+    let sizes = this.state.sizes.map( (size, i) => {
+      return <Picker.Item key={i} value={size.id} label={size.name} style={styles.picker}/>
+    });
+    if (this.props.sizes.length > 0) {
+      sizes = this.props.sizes.map( (size, i) => {
+        if (i == 0) {
+          return (
+            <TouchableNativeFeedback key={i} onPress={() => { this.setState({size: size.id}); this.showModal();}}>
+              <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
+                <Text style={{fontSize: 20, color: '#6d6d6d'}}>{size.name}</Text>
+              </View>
+            </TouchableNativeFeedback>
+          );
+        }
+        return (
+          <TouchableNativeFeedback key={i} onPress={() => { this.setState({size: size.id}); this.showModal();}}>
+            <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, borderTopWidth: 1, borderColor: '#EEF6F9'}}>
+              <Text style={{fontSize: 20, color: '#6d6d6d'}}>{size.name}</Text>
+            </View>
+          </TouchableNativeFeedback>
+        );
+      });
+    }
+    if (this.state.avatarSource === '') {
+      var image = (
+        <View style={[styles.avatar,{backgroundColor: 'rgba(0,0,0,0.5)'}]}>
+          <Icon name="add-a-photo" size={50} color="white" />
+          <Text style={
+            {
+              color: '#fff',
+              fontSize: 18,
+              textShadowColor: 'rgba(0, 0, 0, 0.5)',
+              textShadowRadius: 5,
+              textShadowOffset: {
+                height: 1,
+                width: 0
+              }
+            }
+          }>Agregar imagen</Text>
+        </View>
+      );
+    } else {
+      var image = (
+        <Image style={[styles.avatar, {resizeMode: 'cover'}]} source={{uri: this.state.avatarSource }}>
+
+        </Image>
+      );
+    }
+    if (this.state.loading) {
+      return (
+        <View style={utilities.container}>
+          <StatusBar
+            backgroundColor="#1e9284"
+            barStyle="light-content"
+          />
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <ActivityIndicator
+                animating={true}
+                style={[styles.centering, {height: 80}]}
+                size="large"
+              />
+              <Text style={utilities.text_lg}>Creando mascota...</Text>
+            </View>
+        </View>
+      );
+    }
+    if (this.state.modalType == 'race') {
+      contentModal = races;
+    } else if(this.state.modalType == 'size') {
+      contentModal = sizes;
+    } else {
+      contentModal = genders;
+    }
     return (
-      <View style={[utilities.container, {backgroundColor: '#fff'}]}>
+      <View style={utilities.container}>
+        <StatusBar
+          backgroundColor="#1e9284"
+          barStyle="light-content"
+        />
+          <Icon.ToolbarAndroid
+            style={utilities.toolbar}
+            title={this.state.name}
+            titleColor="white"
+            navIconName="arrow-back"
+            onIconClicked={Actions.pop}
+          />
+          <ScrollView>
 
-            <StatusBar
-              backgroundColor={this.state.colorBar}
-              barStyle="light-content"
-              translucent={this.state.translucent}
-            />
-            <ScrollView>
-              <View>
-              <View style={[styles.avatarContent, {marginTop: -StatusBar.currentHeight}]}>
-                <View style={styles.content2}>
-                  <Image style={styles.avatar} source={{uri: this.props.pet.photos[0].thumbnail }}>
-                  </Image>
-                  <TouchableNativeFeedback onPress={() => {
-                      this.setState({translucent: false, colorBar: '#1e9284'});
-                      Actions.pop();
-                    }
-                  }>
-                    <View style={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: 40,
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'absolute',
-                      top: 40,
-                      left: 0
-                    }}>
-                      <Icon name="arrow-back" size={25} color="white" />
+          <View style={styles.container}>
+            <View style={{marginBottom: 20}}>
+                {image}
+            </View>
+            <TouchableNativeFeedback onPress={() => Alert.alert(
+              'Imagen de la mascota',
+              'Seleccione desde el origen de la imagen',
+              [
+                {text: 'Camara', onPress: this.selectAvatar2.bind(this)},
+                {text: 'Galeria', onPress: this.selectAvatar.bind(this)},
+              ]
+            )}>
+              <View elevation={10} style={[styles.changeAvatar, utilities.color_primary]}>
+                <Icon name="add-a-photo" size={25} color="white" />
+              </View>
+            </TouchableNativeFeedback>
+              <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 10,alignItems: 'center', paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+
+                <View style={{marginLeft: 10, marginRight: 10}}>
+                  <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc'}}>Nombre</Text>
+                  <TextInput
+                    style={{width: '100%', fontSize: 20, color: '#6d6d6d'}}
+                    onChangeText={(name) => this.setState({name: name.replace(/\b[a-z]/g,function(f){return f.toUpperCase();})})}
+                    value={this.state.name}
+                    placeholder="Ingresar nombre"
+                    placeholderTextColor="#ccc"
+                    underlineColorAndroid="transparent"
+
+                  />
+                </View>
+              </View>
+              <TouchableNativeFeedback onPress={this.modalGender.bind(this)}>
+              <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 20, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+
+                <View style={{marginLeft: 10, marginRight: 10, width: '100%'}}>
+                  <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc', marginBottom: 10}}>Sexo</Text>
+                  <View style={{marginLeft: 5, flexDirection: 'row', justifyContent: 'space-between'}}>
+                    {gender}
+                  </View>
+                </View>
+              </View>
+              </TouchableNativeFeedback>
+              <TouchableNativeFeedback onPress={this.modalRace.bind(this)}>
+              <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 20, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+
+                <View style={{marginLeft: 10, marginRight: 10, width: '100%'}}>
+                  <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc', marginBottom: 10}}>Raza</Text>
+                  <View style={{marginLeft: 5, flexDirection: 'row', justifyContent: 'space-between'}}>
+                    {raceName}
+                  </View>
+                </View>
+              </View>
+              </TouchableNativeFeedback>
+              <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 30, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+
+                <View style={{marginLeft: 10, marginRight: 10, width: '100%'}}>
+                  <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc'}}>Edad (Fecha de nacimiento)</Text>
+                  <View style={{marginLeft: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    {age}
+                    <DatePicker
+                      date={this.state.date}
+                      mode="date"
+                      placeholder="Seleccionar fecha"
+                      format="YYYY-MM-DD"
+                      minDate="2010-01-01"
+                      maxDate={moment().format('YYYY-MM-DD')}
+                      iconComponent={
+                        <View style={{backgroundColor: '#1e9284', width: 40, height: 40, borderRadius: 100, justifyContent: 'center', alignItems: 'center'}}>
+                          <Icon name="date-range" size={20} color="white" />
+                        </View>
+                      }
+                      customStyles={{
+                        dateInput: {
+                          borderWidth: 0,
+                          borderBottomWidth: 0,
+                          backgroundColor: '#1e9284',
+                          width: 0,
+                          height: 0,
+                          borderRadius: 5
+                        },
+                        placeholderText: {
+                          color: '#FFF'
+                        }
+                      }}
+                      confirmBtnText="Seleccionar"
+                      cancelBtnText="Cancelar"
+                      hideText={true}
+                      onDateChange={(date) => {this.setState({date: date})}}
+                    />
+                  </View>
+                </View>
+              </View>
+              <TouchableNativeFeedback onPress={this.modalSize.bind(this)}>
+                <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+
+                  <View style={{marginLeft: 10, marginRight: 10, width: '100%'}}>
+                    <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc', marginBottom: 10}}>Tamaño</Text>
+                    <View style={{marginLeft: 5, flexDirection: 'row', justifyContent: 'space-between'}}>
+                      {sizeName}
                     </View>
-                  </TouchableNativeFeedback>
+                  </View>
+                </View>
+              </TouchableNativeFeedback>
+
+              <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 10,alignItems: 'center', paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+
+                <View style={{marginLeft: 10, marginRight: 10}}>
+                  <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc'}}>Comentario</Text>
+                  <TextInput
+                    style={{width: '100%', fontSize: 16, color: '#6d6d6d'}}
+                    multiline={true}
+                    numberOfLines={4}
+                    onChangeText={(text) => this.setState({text})}
+                    value={this.state.text}
+                    placeholder="Ingresar comentario"
+                    placeholderTextColor="#ccc"
+                    underlineColorAndroid="transparent"
+
+                  />
                 </View>
               </View>
+          </View>
+          </ScrollView>
+          <TouchableNativeFeedback onPress={this.showModal.bind(this)}>
+            <Animated.View style={{opacity: this.opacityInterpolate, position: 'absolute', top: 0, backgroundColor: 'rgba(0,0,0,0.5)', width: this.state.width, height: '100%'}}>
               <TouchableNativeFeedback>
-                <View style={[{paddingTop: 30, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
-                  <View style={{marginLeft: 10, width: 40}}>
-                    <Icon name="pets" size={28} color="#08AE9E" />
-                  </View>
-                  <View style={{marginLeft: 10, width: 150}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Raza</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>{this.props.pet.race.name}</Text>
-                  </View>
-                  <View style={{marginLeft: 10, width: 100}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Edad</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>{age}</Text>
-                  </View>
-                </View>
+                <Animated.View style={{position: 'absolute', bottom: this.state.slide, width: '100%', backgroundColor: '#fff'}}>
+                  {contentModal}
+                </Animated.View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback>
-                <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
-                  <View style={{marginLeft: 10, width: 40}}>
-                    <Icon name="info" size={28} color="#08AE9E" />
-                  </View>
-                  <View style={{marginLeft: 10, width: 150}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Genero</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>Macho</Text>
-                  </View>
-                  <View style={{marginLeft: 10, width: 100}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Tamaño</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>{this.props.pet.size.name}</Text>
-                  </View>
-                </View>
-              </TouchableNativeFeedback>
-              <TouchableNativeFeedback>
-                <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
-                  <View style={{marginLeft: 10, width: 40}}>
-                    <Icon name="message" size={28} color="#08AE9E" />
-                  </View>
-                  <View style={{marginLeft: 10, marginRight: 10}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Comentario</Text>
-                    <Text style={{fontSize: 14, color: '#6d6d6d', textAlign: 'justify'}}>{comments}</Text>
-                  </View>
+            </Animated.View>
+          </TouchableNativeFeedback>
 
-                </View>
-              </TouchableNativeFeedback>
-
-              <TouchableNativeFeedback>
-                <View elevation={10} style={[styles.changeAvatar, utilities.color_primary]}>
-                  <Icon name="edit" size={25} color="white" />
-                </View>
-              </TouchableNativeFeedback>
-              <TouchableNativeFeedback>
-                <View style={[styles.namePet]}>
-                  <Text style={
-                    {
-                      fontSize: 38, color: '#FFF',
-                      fontWeight: 'bold',
-                      textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                      textShadowRadius: 5,
-                      marginBottom: 0,
-                      textShadowOffset: {
-                        height: 1,
-                        width: 0
-                      }
-                    }
-                  }>{this.props.pet.name}</Text>
-                  <View elevation={3} style={{marginTop: 5,backgroundColor: '#08AE9E', borderRadius: 10,flexDirection: 'row',alignItems: 'center', justifyContent: 'center', paddingLeft: 5, paddingRight: 8, paddingTop: 2, paddingBottom: 2}}>
-                    <Icon name="pets" size={15} color="#fff" />
-
-                    <Text style={
-                      {
-                        fontSize: 14, color: '#FFF',
-                        fontWeight: 'bold',
-                        textShadowColor: 'rgba(0, 0, 0, 0.5)',
-                        textShadowRadius: 5,
-                        marginLeft: 5
-                      }
-                    }>{this.props.pet.race.name.toUpperCase()}</Text>
-
-                  </View>
-                </View>
-              </TouchableNativeFeedback>
-
-              </View>
-            </ScrollView>
       </View>
     );
   }
 }
 
-
 const styles = StyleSheet.create({
-  avatar: {
-    width: '100%',
-    height: 300,
-    resizeMode: 'cover',
+  letter: {
+    fontSize: 20,
+    color: '#FFF'
   },
-  carousel: {
-    backgroundColor: '#FFF'
+  container1: {
+    flex: 1,
   },
-  photo: {
-    width: 80,
-    height: 80,
-    margin: 5,
-    resizeMode: 'cover',
+  inputText: {
+    fontSize: 22
   },
   changeAvatar: {
     width: 60,
@@ -188,31 +597,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 245,
+    top: 170,
     right: 20
   },
-  namePet: {
-    position: 'absolute',
-    alignItems: 'flex-start',
-    top: 180,
-    left: 20
+  picker: {
+    borderBottomWidth: 0,
+    borderColor: '#ccc',
+    fontSize: 20,
+    color: '#6d6d6d'
   },
-  avatarContent: {
+  avatar: {
+    width: '100%',
+    height: 200,
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '100%'
   },
-  colorGrey: {
-    backgroundColor: '#fff'
+  container: {
+
   },
-  data: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    paddingTop: 15,
-    paddingBottom: 15
+  input: {
+    flex: 1,
+    marginRight: 10,
+    marginLeft: 10
   },
-  item: {
-    fontSize: 16,
-    marginLeft: 25
+  margins: {
+    marginRight: 10,
+    marginLeft: 10
   }
 });

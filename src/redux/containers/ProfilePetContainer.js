@@ -10,8 +10,11 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    pet: ownProps.pet,
     user: state.auth,
-    pet: ownProps.pet
+    pets: state.pets,
+    sizes: state.sizes,
+    races: state.races
   }
 }
 

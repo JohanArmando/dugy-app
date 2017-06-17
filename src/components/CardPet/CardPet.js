@@ -68,7 +68,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'flex-start',
     marginLeft: '2%',
-    marginTop: '2%'
+    marginTop: '2%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
   },
   TitlePet: {
     fontSize: 19,

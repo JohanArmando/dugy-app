@@ -58,7 +58,7 @@ export default class Home extends Component {
           onIconClicked={Actions.pop}
           elevation={1}
         />
-          <View style={{flex: 1, backgroundColor: '#f9f9f9'}}>
+          <View style={{flex: 1, backgroundColor: '#f1f1f1'}}>
             <ListView
               contentContainerStyle={
                 {

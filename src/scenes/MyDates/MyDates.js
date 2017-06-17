@@ -49,7 +49,7 @@ export default class Profile extends Component {
           onIconClicked={Actions.pop}
           elevation={1}
         />
-        <View style={[utilities.container, {backgroundColor: '#f9f9f9'}]}>
+        <View style={[utilities.container, {backgroundColor: '#f1f1f1'}]}>
           <ListView
             contentContainerStyle={
               {

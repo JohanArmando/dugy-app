@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     justifyContent: 'center',
-    marginTop: 10
+    marginTop: 5
   },
   pets: {
     flexDirection: 'row',

@@ -44,6 +44,7 @@ export default class Home extends Component {
       opacity: new Animated.Value(0),
       height: new Animated.Value(0),
       width: new Animated.Value(0),
+      slide: new Animated.Value(-500),
       loading: false,
       avatarSource: '',
       races: [{
@@ -97,26 +98,37 @@ export default class Home extends Component {
   showModal()
   {
     if (this.state.openModal) {
-      Animated.timing(this.state.opacity, {
-        toValue: 100,
+      Animated.sequence([
+        Animated.timing(this.state.width, {
+          toValue: width,
+          duration: 0
+        }),
+        Animated.timing(this.state.opacity, {
+          toValue: 100,
+          duration: 250
+        })
+      ]).start();
+      Animated.timing(this.state.slide, {
+        toValue: 0,
         duration: 250
       }).start();
-      Animated.timing(this.state.width, {
-        toValue: width,
-        duration: 250
-      }).start();
+
 
     } else {
-      Animated.timing(this.state.width, {
-        toValue: 0,
+      Animated.sequence([
+        Animated.timing(this.state.opacity, {
+          toValue: 0,
+          duration: 250
+        }),
+        Animated.timing(this.state.width, {
+          toValue: 0,
+          duration: 0
+        })
+      ]).start();
+      Animated.timing(this.state.slide, {
+        toValue: -500,
         duration: 250
       }).start();
-      Animated.timing(this.state.opacity, {
-        toValue: 0,
-        duration: 250
-      }).start();
-
-
     }
     this.setState({openModal: !this.state.openModal});
   }
@@ -151,15 +163,7 @@ export default class Home extends Component {
   }
 
   sendPet () {
-    data = {
-      name: this.state.name,
-      race: this.state.race,
-      size: this.state.size,
-      comments: this.state.text,
-      avatar: this.state.avatarSource,
-      born_date: this.state.date,
-      id: this.props.user.id
-    };
+
     if (this.state.name == '') {
       ToastAndroid.show('Debe colocar el nombre de la mascota', ToastAndroid.SHORT);
     } else if (this.state.date == '') {
@@ -171,7 +175,15 @@ export default class Home extends Component {
     } else if (this.state.size == '') {
       ToastAndroid.show('Debe colocar el tamaño de la mascota', ToastAndroid.SHORT);
     } else {
-      console.log(data)
+      data = {
+        name: this.state.name,
+        race: this.state.race,
+        size: this.state.size,
+        comments: this.state.text,
+        avatar: this.state.avatarSource,
+        born_date: moment.utc(moment(this.state.date).format()).format(),
+        id: this.props.user.id
+      };
       this.setState({
         loading: true
       });
@@ -564,11 +576,11 @@ export default class Home extends Component {
           </View>
           </ScrollView>
           <TouchableNativeFeedback onPress={this.showModal.bind(this)}>
-            <Animated.View style={{alignItems: 'center', justifyContent: 'center', opacity: this.opacityInterpolate, position: 'absolute', top: 0, backgroundColor: 'rgba(0,0,0,0.5)', width: this.state.width, height: '100%'}}>
+            <Animated.View style={{opacity: this.opacityInterpolate, position: 'absolute', top: 0, backgroundColor: 'rgba(0,0,0,0.5)', width: this.state.width, height: '100%'}}>
               <TouchableNativeFeedback>
-                <View style={{width: '80%', backgroundColor: '#fff', borderRadius: 5}}>
+                <Animated.View style={{position: 'absolute', bottom: this.state.slide, width: '100%', backgroundColor: '#fff'}}>
                   {contentModal}
-                </View>
+                </Animated.View>
               </TouchableNativeFeedback>
             </Animated.View>
           </TouchableNativeFeedback>
