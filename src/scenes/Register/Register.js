@@ -110,7 +110,7 @@ export default class Home extends Component {
           title="Registrarse"
           titleColor="white"
           navIconName="arrow-back"
-          onIconClicked={Actions.Welcome}
+          onIconClicked={Actions.pop}
         />
         <ScrollView style={{flex: 1}}>
 

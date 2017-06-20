@@ -4,7 +4,8 @@ import { Actions } from 'react-native-router-flux';
 import DrawerLayout from '../../redux/containers/DrawerContainer'
 import ActionButton from '../../components/ActionButton/ActionButton'
 import CaurruselItem from '../../components/CaurruselItem/CaurruselItem'
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import IconM from 'react-native-vector-icons/MaterialIcons';
 var utilities = require('../../assets/css/utilities');
 import moment from 'moment';
 require('moment/locale/es.js');
@@ -14,11 +15,22 @@ export default class Profile extends Component {
   constructor(){
     super();
     this.state = {
-      translucent: true,
-      colorBar: 'rgba(0,0,0,0.5)'
+      translucent: false,
+      colorBar: '#1e9284'
     }
   }
   render (){
+    let gender;
+    if (this.props.pet.gender == 0) {
+      gender = (
+        <Icon name="venus" size={14} color="white" />
+      );
+    } else {
+      gender = (
+        <Icon name="mars" size={14} color="white" />
+      );
+    }
+
     var comments;
     if (this.props.pet.comments == null || this.props.pet.comments == '') {
       comments = 'Sin comentario';
@@ -40,6 +52,10 @@ export default class Profile extends Component {
         age = age + ' años';
       }
     }
+    const goToViewProfilePet = () => {
+      this.setState({translucent: false, colorBar: '#1e9284'});
+      Actions.ProfilePet({ pet: this.props.pet })
+    };
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var source = ds.cloneWithRows([...this.props.pet.photos, {thumbnail: 'http://icon-icons.com/icons2/841/PNG/512/flat-style-circle-add_icon-icons.com_66944.png'}])
     return (
@@ -54,7 +70,7 @@ export default class Profile extends Component {
               <View>
               <View style={[styles.avatarContent, {marginTop: -StatusBar.currentHeight}]}>
                 <View style={styles.content2}>
-                  <Image style={styles.avatar} source={{uri: this.props.pet.photos[0].thumbnail }}>
+                  <Image style={styles.avatar} source={{uri: this.props.pet.avatar.thumbnail }}>
                   </Image>
                   <TouchableNativeFeedback onPress={() => {
                       this.setState({translucent: false, colorBar: '#1e9284'});
@@ -69,19 +85,17 @@ export default class Profile extends Component {
                       justifyContent: 'center',
                       alignItems: 'center',
                       position: 'absolute',
-                      top: 40,
+                      top: 25,
                       left: 0
                     }}>
-                      <Icon name="arrow-back" size={25} color="white" />
+                      <IconM name="arrow-back" size={25} color="white" />
                     </View>
                   </TouchableNativeFeedback>
                 </View>
               </View>
               <TouchableNativeFeedback>
                 <View style={[{paddingTop: 30, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
-                  <View style={{marginLeft: 10, width: 40}}>
-                    <Icon name="pets" size={28} color="#08AE9E" />
-                  </View>
+
                   <View style={{marginLeft: 10, width: 150}}>
                     <Text style={{fontSize: 16, color: '#ccc'}}>Raza</Text>
                     <Text style={{fontSize: 20, color: '#6d6d6d'}}>{this.props.pet.race.name}</Text>
@@ -94,9 +108,7 @@ export default class Profile extends Component {
               </TouchableNativeFeedback>
               <TouchableNativeFeedback>
                 <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
-                  <View style={{marginLeft: 10, width: 40}}>
-                    <Icon name="info" size={28} color="#08AE9E" />
-                  </View>
+
                   <View style={{marginLeft: 10, width: 150}}>
                     <Text style={{fontSize: 16, color: '#ccc'}}>Genero</Text>
                     <Text style={{fontSize: 20, color: '#6d6d6d'}}>Macho</Text>
@@ -109,9 +121,6 @@ export default class Profile extends Component {
               </TouchableNativeFeedback>
               <TouchableNativeFeedback>
                 <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
-                  <View style={{marginLeft: 10, width: 40}}>
-                    <Icon name="message" size={28} color="#08AE9E" />
-                  </View>
                   <View style={{marginLeft: 10, marginRight: 10}}>
                     <Text style={{fontSize: 16, color: '#ccc'}}>Comentario</Text>
                     <Text style={{fontSize: 14, color: '#6d6d6d', textAlign: 'justify'}}>{comments}</Text>
@@ -120,16 +129,16 @@ export default class Profile extends Component {
                 </View>
               </TouchableNativeFeedback>
 
-              <TouchableNativeFeedback>
+              <TouchableNativeFeedback onPress={goToViewProfilePet}>
                 <View elevation={10} style={[styles.changeAvatar, utilities.color_primary]}>
-                  <Icon name="edit" size={25} color="white" />
+                  <IconM name="edit" size={25} color="white" />
                 </View>
               </TouchableNativeFeedback>
               <TouchableNativeFeedback>
                 <View style={[styles.namePet]}>
                   <Text style={
                     {
-                      fontSize: 38, color: '#FFF',
+                      fontSize: 30, color: '#FFF',
                       fontWeight: 'bold',
                       textShadowColor: 'rgba(0, 0, 0, 0.5)',
                       textShadowRadius: 5,
@@ -141,11 +150,11 @@ export default class Profile extends Component {
                     }
                   }>{this.props.pet.name}</Text>
                   <View elevation={3} style={{marginTop: 5,backgroundColor: '#08AE9E', borderRadius: 10,flexDirection: 'row',alignItems: 'center', justifyContent: 'center', paddingLeft: 5, paddingRight: 8, paddingTop: 2, paddingBottom: 2}}>
-                    <Icon name="pets" size={15} color="#fff" />
+                    {gender}
 
                     <Text style={
                       {
-                        fontSize: 14, color: '#FFF',
+                        fontSize: 12, color: '#FFF',
                         fontWeight: 'bold',
                         textShadowColor: 'rgba(0, 0, 0, 0.5)',
                         textShadowRadius: 5,
@@ -194,7 +203,7 @@ const styles = StyleSheet.create({
   namePet: {
     position: 'absolute',
     alignItems: 'flex-start',
-    top: 180,
+    top: 190,
     left: 20
   },
   avatarContent: {

@@ -11,6 +11,7 @@ import Profile from './redux/containers/ProfileContainer';
 import Pays from './redux/containers/PaysContainer';
 import EditProfile from './redux/containers/EditProfileContainer';
 import ProfilePet from './redux/containers/ProfilePetContainer';
+import ViewProfilePet from './redux/containers/ViewProfilePetContainer';
 import ServiceDetails from './redux/containers/ServiceDetailsContainer';
 import WalkerProfile from './redux/containers/WalkerProfileContainer';
 import MyDates from './redux/containers/MyDatesContainer';
@@ -38,6 +39,7 @@ const Scenes = Actions.create(
     <Scene key="Profile" component={Profile}  title="Profile" hideNavBar='true'/>
     <Scene key="EditProfile" component={EditProfile}  title="EditProfile" hideNavBar='true'/>
     <Scene key="ProfilePet" component={ProfilePet}  title="ProfilePet" hideNavBar='true'/>
+    <Scene key="ViewProfilePet" component={ViewProfilePet}  title="ViewProfilePet" hideNavBar='true'/>
     <Scene key="ServiceDetails" component={ServiceDetails}  title="ServiceDetails" hideNavBar='true'/>
     <Scene key="WalkerProfile" component={WalkerProfile}  title="WalkerProfile" hideNavBar='true'/>
     <Scene key="CreateWalk" component={CreateWalk}  title="CreateWalk" hideNavBar='true'/>

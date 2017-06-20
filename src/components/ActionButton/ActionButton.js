@@ -7,7 +7,7 @@ export default class ActionButton extends Component {
   render() {
     return (
       <TouchableNativeFeedback onPress={this.props.action}>
-        <View style={[styles.buttonAction, utilities.color_primary]} elevation={2}>
+        <View style={[styles.buttonAction, utilities.color_primary]} elevation={10}>
           {this.props.icon}
         </View>
       </TouchableNativeFeedback>

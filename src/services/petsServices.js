@@ -37,3 +37,19 @@ export function storePet (data) {
     })
   })
 }
+
+export function updatePet (data) {
+  console.log("data",data);
+  return new Promise((resolve, reject) => {
+    axios.put('/pets/' + data.id, data)
+    .then(response => {
+      console.log("pet",response.data);
+
+      resolve(response.data)
+    })
+    .catch(error => {
+      console.log('error', error.response.data)
+      reject(error)
+    })
+  })
+}

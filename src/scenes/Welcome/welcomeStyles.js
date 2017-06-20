@@ -28,14 +28,35 @@ module.exports = StyleSheet.create({
     fontWeight: 'bold',
   },
   logo: {
-    width: 220,
-    height: 220,
+    width: 200,
+    height: 200,
     backgroundColor: '#00a79d',
   },
   buttons: {
     flexDirection: 'row',
     alignSelf: 'stretch',
     justifyContent: 'space-around',
+  },
+  input: {
+    backgroundColor: 'white',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 15,
+    borderWidth: 1,
+    borderColor: '#CCC',
+    borderRadius: 5,
+    marginBottom: 5,
+    fontSize: 16
+  },
+  buttonRegister: {
+    backgroundColor: '#1e9284',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 15,
+    borderWidth: 1,
+    borderColor: '#1b897c',
+    borderRadius: 5,
+    marginBottom: 5
   },
   button: {
     textAlign: 'center',

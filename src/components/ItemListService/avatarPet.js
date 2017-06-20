@@ -16,7 +16,7 @@ export default class AvatarPet extends Component {
     );
     if (this.props.pet != null) {
       image = (
-        <Image style={styles.avatarPet} source={{uri: this.props.pet.photos[0].thumbnail }}/>
+        <Image style={styles.avatarPet} source={{uri: this.props.pet.avatar.thumbnail }}/>
       );
     }
     return  (

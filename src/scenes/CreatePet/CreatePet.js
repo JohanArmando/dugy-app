@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 170,
+    top: 190,
     right: 20
   },
   picker: {
@@ -646,7 +646,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     width: '100%',
-    height: 200,
+    height: 220,
     justifyContent: 'center',
     alignItems: 'center',
   },

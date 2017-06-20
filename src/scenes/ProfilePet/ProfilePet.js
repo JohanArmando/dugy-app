@@ -3,7 +3,7 @@ import { View, Animated, ActivityIndicator, DatePickerAndroid, Text, ToastAndroi
 import { Actions } from 'react-native-router-flux';
 import ImagePicker from 'react-native-image-crop-picker'
 import DatePicker from 'react-native-datepicker';
-import { getPets, storePet } from '../../services/petsServices';
+import { updatePet } from '../../services/petsServices';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import moment from 'moment';
 import Dimensions from 'Dimensions';
@@ -30,14 +30,18 @@ export default class Home extends Component {
 
   constructor(props) {
     super();
+    this.updatePet = props.updatePet;
     this.state = {
       name: props.pet.name,
       race: props.pet.race.id,
       size: props.pet.size.id,
-      avatar: props.pet.photos[0].thumbnail,
+      avatar: props.pet.avatar.thumbnail,
       date: props.pet.born_date,
       text: props.pet.comments,
-      gender: 1,
+      gender: props.pet.gender,
+      original_name: props.pet.name,
+      original_text: props.pet.comments,
+      imageloader: false,
       modalType: 'race',
       openModal: true,
       opacity: new Animated.Value(0),
@@ -87,10 +91,24 @@ export default class Home extends Component {
 
         // You can also display the image using data:
         let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        console.log(response)
         this.setState({
-          avatarSource: source.uri
+          imageloader: true
         });
+        updatePet({id: this.props.pet.id, avatar: {avatar: source.uri, name: 'avatar'} })
+        .then(pet => {
+          this.updatePet(pet);
+          ToastAndroid.show('Se ha actualizado el avatar de la mascota', ToastAndroid.SHORT);
+          this.setState({
+            imageloader: false
+          });
+        })
+        .catch((err) => {
+          ToastAndroid.show('no se ha podido actualizar el avatar de la mascota', ToastAndroid.SHORT);
+          this.setState({
+            imageloader: false
+          });
+        });
+
       }
     });
   }
@@ -153,58 +171,28 @@ export default class Home extends Component {
 
         // You can also display the image using data:
         let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        console.log(response)
+        // console.log(response)
         this.setState({
-          avatarSource: source.uri
+          imageloader: true
+        });
+        updatePet({id: this.props.pet.id, avatar: {avatar: source.uri, name: 'avatar'} })
+        .then(pet => {
+          this.updatePet(pet);
+          ToastAndroid.show('Se ha actualizado el avatar de la mascota', ToastAndroid.SHORT);
+          this.setState({
+            imageloader: false
+          });
+        })
+        .catch((err) => {
+          ToastAndroid.show('no se ha podido actualizar el avatar de la mascota', ToastAndroid.SHORT);
+          this.setState({
+            imageloader: false
+          });
         });
       }
     });
   }
 
-  sendPet () {
-
-    if (this.state.name == '') {
-      ToastAndroid.show('Debe colocar el nombre de la mascota', ToastAndroid.SHORT);
-    } else if (this.state.date == '') {
-      ToastAndroid.show('Debe colocar la fecha de nacimiento de la mascota', ToastAndroid.SHORT);
-    } else if (this.state.avatarSource == '') {
-      ToastAndroid.show('Debe colocar una foto de la mascota', ToastAndroid.SHORT);
-    } else if (this.state.race == '') {
-      ToastAndroid.show('Debe colocar la raza de la mascota', ToastAndroid.SHORT);
-    } else if (this.state.size == '') {
-      ToastAndroid.show('Debe colocar el tamaño de la mascota', ToastAndroid.SHORT);
-    } else {
-      data = {
-        name: this.state.name,
-        race: this.state.race,
-        size: this.state.size,
-        comments: this.state.text,
-        avatar: this.state.avatarSource,
-        born_date: moment.utc(moment(this.state.date).format()).format(),
-        id: this.props.user.id
-      };
-      this.setState({
-        loading: true
-      });
-      storePet(data)
-      .then(pet => {
-        getPets()
-        .then((data) => {
-          this.populatePets(data);
-          ToastAndroid.show('mascota agregada', ToastAndroid.SHORT);
-          Actions.Home({type: 'reset'});
-        })
-        .catch(data => {
-          this.setState({
-            loading: false
-          });
-          ToastAndroid.show('No se pudo crear la mascota', ToastAndroid.SHORT);
-          console.log(data)
-        });
-        console.log('pet', pet)
-      })
-    }
-  }
   modalRace () {
     this.setState({modalType: 'race'});
     this.showModal();
@@ -234,23 +222,49 @@ export default class Home extends Component {
     var gender;
     var genders = (
       <View>
-        <TouchableNativeFeedback onPress={() => { this.setState({gender: 0}); this.showModal();}}>
+        <TouchableNativeFeedback onPress={
+          () => {
+            updatePet({id: this.props.pet.id, gender: 1})
+            .then(pet => {
+              this.updatePet(pet);
+              this.showModal();
+              ToastAndroid.show('Se ha actualizado el sexo de la mascota', ToastAndroid.SHORT);
+            })
+            .catch((err) => {
+              ToastAndroid.show('no se ha podido actualizar la raza de la mascota', ToastAndroid.SHORT);
+              this.showModal();
+            });
+          }
+        }>
           <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, borderBottomWidth: 1, borderColor: '#EEF6F9'}}>
             <Text style={{fontSize: 20, color: '#6d6d6d'}}>Macho</Text>
           </View>
         </TouchableNativeFeedback>
-        <TouchableNativeFeedback onPress={() => { this.setState({gender: 1}); this.showModal();}}>
+        <TouchableNativeFeedback onPress={
+          () => {
+            updatePet({id: this.props.pet.id, gender: 0})
+            .then(pet => {
+              this.updatePet(pet);
+              this.showModal();
+              ToastAndroid.show('Se ha actualizado el sexo de la mascota', ToastAndroid.SHORT);
+            })
+            .catch((err) => {
+              ToastAndroid.show('no se ha podido actualizar la raza de la mascota', ToastAndroid.SHORT);
+              this.showModal();
+            });
+          }
+        }>
           <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
             <Text style={{fontSize: 20, color: '#6d6d6d'}}>Hembra</Text>
           </View>
         </TouchableNativeFeedback>
       </View>
     );
-    if (this.state.gender == -1) {
+    if (this.props.pet.gender == -1) {
       gender = (
         <Text style={{fontSize: 20, color: '#CCC'}}>Seleccionar sexo</Text>
       );
-    } else if (this.state.gender == 0) {
+    } else if (this.props.pet.gender == 1) {
       gender = (
         <Text style={{fontSize: 20, color: '#6d6d6d'}}>Macho</Text>
       );
@@ -260,7 +274,7 @@ export default class Home extends Component {
       );
     }
     raceName = this.props.races.filter(r => {
-      if (r.id == this.state.race) {
+      if (r.id == this.props.pet.race.id) {
         return r;
       }
     });
@@ -279,7 +293,7 @@ export default class Home extends Component {
     }
 
     sizeName = this.props.sizes.filter(r => {
-      if (r.id == this.state.size) {
+      if (r.id == this.props.pet.size.id) {
         return r;
       }
     });
@@ -295,7 +309,7 @@ export default class Home extends Component {
 
 
     if (this.state.date != '') {
-      age = moment().diff(this.state.date, 'years');
+      age = moment().diff(this.props.pet.born_date, 'years');
       if (age == 0) {
         age = moment().diff(this.state.date, 'months');
         if (age > 1) {
@@ -336,7 +350,20 @@ export default class Home extends Component {
       races = this.props.races.map( (race, i) => {
         if (i == 0) {
           return (
-            <TouchableNativeFeedback key={i} onPress={() => { this.setState({race: race.id}); this.showModal();}}>
+            <TouchableNativeFeedback key={i} onPress={
+              () => {
+                updatePet({id: this.props.pet.id, race: race.id})
+                .then(pet => {
+                  this.updatePet(pet);
+                  this.showModal();
+                  ToastAndroid.show('Se ha actualizado la raza de la mascota', ToastAndroid.SHORT);
+                })
+                .catch((err) => {
+                  ToastAndroid.show('no se ha podido actualizar la raza de la mascota', ToastAndroid.SHORT);
+                  this.showModal();
+                });
+              }
+            }>
               <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
                 <Text style={{fontSize: 20, color: '#6d6d6d'}}>{race.name}</Text>
               </View>
@@ -344,7 +371,22 @@ export default class Home extends Component {
           );
         }
         return (
-          <TouchableNativeFeedback key={i} onPress={() => { this.setState({race: race.id}); this.showModal();}}>
+          <TouchableNativeFeedback key={i}
+          onPress={
+            () => {
+              updatePet({id: this.props.pet.id, race: race.id})
+              .then(pet => {
+                this.updatePet(pet);
+                this.showModal();
+                ToastAndroid.show('Se ha actualizado la raza de la mascota', ToastAndroid.SHORT);
+              })
+              .catch((err) => {
+                ToastAndroid.show('no se ha podido actualizar la raza de la mascota', ToastAndroid.SHORT);
+                this.showModal();
+              });
+            }
+          }
+          >
             <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, borderTopWidth: 1, borderColor: '#EEF6F9'}}>
               <Text style={{fontSize: 20, color: '#6d6d6d'}}>{race.name}</Text>
             </View>
@@ -359,7 +401,20 @@ export default class Home extends Component {
       sizes = this.props.sizes.map( (size, i) => {
         if (i == 0) {
           return (
-            <TouchableNativeFeedback key={i} onPress={() => { this.setState({size: size.id}); this.showModal();}}>
+            <TouchableNativeFeedback key={i} onPress={
+              () => {
+                updatePet({id: this.props.pet.id, size: size.id})
+                .then(pet => {
+                  this.showModal();
+                  this.updatePet(pet);
+                  ToastAndroid.show('Se ha actualizado el tamaño de la mascota', ToastAndroid.SHORT);
+                })
+                .catch((err) => {
+                  ToastAndroid.show('no se ha podido actualizar el tamaño de la mascota', ToastAndroid.SHORT);
+                  this.showModal();
+                });
+              }
+            }>
               <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10}}>
                 <Text style={{fontSize: 20, color: '#6d6d6d'}}>{size.name}</Text>
               </View>
@@ -367,7 +422,20 @@ export default class Home extends Component {
           );
         }
         return (
-          <TouchableNativeFeedback key={i} onPress={() => { this.setState({size: size.id}); this.showModal();}}>
+          <TouchableNativeFeedback key={i} onPress={
+            () => {
+              updatePet({id: this.props.pet.id, size: size.id})
+              .then(pet => {
+                this.showModal();
+                this.updatePet(pet);
+                ToastAndroid.show('Se ha actualizado el tamaño de la mascota', ToastAndroid.SHORT);
+              })
+              .catch((err) => {
+                ToastAndroid.show('no se ha podido actualizar el tamaño de la mascota', ToastAndroid.SHORT);
+                this.showModal();
+              });
+            }
+          }>
             <View style={{paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, borderTopWidth: 1, borderColor: '#EEF6F9'}}>
               <Text style={{fontSize: 20, color: '#6d6d6d'}}>{size.name}</Text>
             </View>
@@ -375,7 +443,7 @@ export default class Home extends Component {
         );
       });
     }
-    if (this.state.avatarSource === '') {
+    if (this.props.pet.avatar.thumbnail === '') {
       var image = (
         <View style={[styles.avatar,{backgroundColor: 'rgba(0,0,0,0.5)'}]}>
           <Icon name="add-a-photo" size={50} color="white" />
@@ -394,9 +462,20 @@ export default class Home extends Component {
         </View>
       );
     } else {
+      let load;
+      if (this.state.imageloader) {
+        load = (
+          <ActivityIndicator
+            animating={true}
+            color="white"
+            style={[styles.centering, {height: 150}]}
+            size="large"
+          />
+        );
+      }
       var image = (
-        <Image style={[styles.avatar, {resizeMode: 'cover'}]} source={{uri: this.state.avatarSource }}>
-
+        <Image style={[styles.avatar, {resizeMode: 'cover'}]} source={{uri: this.props.pet.avatar.thumbnail }}>
+          {load}
         </Image>
       );
     }
@@ -433,7 +512,7 @@ export default class Home extends Component {
         />
           <Icon.ToolbarAndroid
             style={utilities.toolbar}
-            title={this.state.name}
+            title={'Editar ' + this.props.pet.name}
             titleColor="white"
             navIconName="arrow-back"
             onIconClicked={Actions.pop}
@@ -462,7 +541,22 @@ export default class Home extends Component {
                   <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc'}}>Nombre</Text>
                   <TextInput
                     style={{width: '100%', fontSize: 20, color: '#6d6d6d'}}
-                    onChangeText={(name) => this.setState({name: name.replace(/\b[a-z]/g,function(f){return f.toUpperCase();})})}
+                    autoCapitalize = 'words'
+                    onChangeText={(name) => this.setState({name: name})}
+                    onEndEditing = {
+                      () => {
+                        if (this.props.pet.name != this.state.name) {
+                          updatePet({id: this.props.pet.id, name: this.state.name})
+                          .then(pet => {
+                            this.updatePet(pet);
+                            ToastAndroid.show('Se ha actualizado el nombre de la mascota', ToastAndroid.SHORT);
+                          })
+                          .catch((err) => {
+                            ToastAndroid.show('no se ha podido actualizar el nombre de la mascota', ToastAndroid.SHORT);
+                          });
+                        }
+                      }
+                    }
                     value={this.state.name}
                     placeholder="Ingresar nombre"
                     placeholderTextColor="#ccc"
@@ -527,7 +621,16 @@ export default class Home extends Component {
                       confirmBtnText="Seleccionar"
                       cancelBtnText="Cancelar"
                       hideText={true}
-                      onDateChange={(date) => {this.setState({date: date})}}
+                      onDateChange={(date) => {
+                        updatePet({id: this.props.pet.id, born_date: moment.utc(moment(date).format()).format()})
+                        .then(pet => {
+                          this.updatePet(pet);
+                          ToastAndroid.show('Se ha actualizado la edad de la mascota', ToastAndroid.SHORT);
+                        })
+                        .catch((err) => {
+                          ToastAndroid.show('no se ha podido actualizar la edad de la mascota', ToastAndroid.SHORT);
+                        });
+                      }}
                     />
                   </View>
                 </View>
@@ -556,7 +659,22 @@ export default class Home extends Component {
                     value={this.state.text}
                     placeholder="Ingresar comentario"
                     placeholderTextColor="#ccc"
+                    autoCapitalize = 'sentences'
                     underlineColorAndroid="transparent"
+                    onEndEditing = {
+                      () => {
+                        if (this.props.pet.comments != this.state.text) {
+                          updatePet({id: this.props.pet.id, comments: this.state.text})
+                          .then(pet => {
+                            this.updatePet(pet);
+                            ToastAndroid.show('Se ha actualizado el comentario acerca de la mascota', ToastAndroid.SHORT);
+                          })
+                          .catch((err) => {
+                            ToastAndroid.show('no se ha podido actualizar el comentario acerca de la mascota', ToastAndroid.SHORT);
+                          });
+                        }
+                      }
+                    }
 
                   />
                 </View>
@@ -597,7 +715,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: 170,
+    top: 190,
     right: 20
   },
   picker: {
@@ -608,7 +726,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     width: '100%',
-    height: 200,
+    height: 220,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -104,7 +104,7 @@ export default class Home extends Component {
           title="Iniciar Sesión"
           titleColor="white"
           navIconName="arrow-back"
-          onIconClicked={Actions.Welcome}
+          onIconClicked={Actions.pop}
         />
         <View style={[{flex: 1, alignItems: 'center', justifyContent: 'center'}]}>
           <View>

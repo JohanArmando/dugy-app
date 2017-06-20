@@ -17,6 +17,11 @@ export const addPet = (pet) => ({
   pet
 })
 
+export const updatePet = (pet) => ({
+  type: 'UPDATE_PET',
+  pet
+})
+
 export const populatePets = (pets) => ({
   type: 'POPULATE_PETS',
   pets

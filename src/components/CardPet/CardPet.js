@@ -2,38 +2,38 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, Image, View, TouchableNativeFeedback } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 var utilities = require('../../assets/css/utilities');
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/MaterialIcons';
 
 export default class CardPet extends Component {
 
 render() {
   const goToProfilePet= () => Actions.ProfilePet({ pet: this.props.pet });
-  if (this.props.pet.photos.length === 0) {
-    return (
-      <TouchableNativeFeedback onPress={goToProfilePet}>
-        <View style={styles.pet}>
-          <View style={[styles.avatar,utilities.color_primary]}>
-            <Text style={styles.letter}>{this.props.pet.name.substring(0,1)}</Text>
-          </View>
-          <View style={styles.margins}>
-            <Text style={styles.TitlePet}>{this.props.pet.name}</Text>
-            <Text style={styles.SubtitlePet}>Raza: {this.props.pet.race.name}</Text>
-            <Text style={styles.SubtitlePet}>Tamaño: {this.props.pet.size.name}</Text>
-            <Text style={styles.SubtitlePet}>Paseo: Ayer</Text>
-          </View>
-        </View>
-      </TouchableNativeFeedback>
+  const goToViewProfilePet = () => Actions.ViewProfilePet({ pet: this.props.pet });
+  let gender;
+  if (this.props.pet.gender == 0) {
+    gender = (
+      <Icon name="venus" size={14} color="#1e9284" />
     );
   } else {
+    gender = (
+      <Icon name="mars" size={14} color="#1e9284" />
+    );
+  }
+
     return (
-      <TouchableNativeFeedback >
+      <TouchableNativeFeedback onPress={goToViewProfilePet}>
         <View elevation={2} style={styles.pet}>
           <View style={styles.avatar_img}>
-            <Image style={styles.img} source={{uri: this.props.pet.photos[0].thumbnail }} />
+            <Image style={styles.img} source={{uri: this.props.pet.avatar.thumbnail }} />
           </View>
           <View style={styles.margins}>
             <Text style={styles.TitlePet}>{this.props.pet.name}</Text>
-            <Text style={styles.SubtitlePet}>{this.props.pet.race.name}</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <Text style={styles.SubtitlePet}>{this.props.pet.race.name}</Text>
+                {gender}
+            </View>
+
           </View>
           <View  style={{
             top: 110,
@@ -49,7 +49,7 @@ render() {
                 alignItems: 'center',
                 borderRadius: 100,
               }}>
-                <Icon name="remove-red-eye" size={18} color="white" />
+              <Icon2 name="edit" size={18} color="white" />
               </View>
             </TouchableNativeFeedback>
           </View>
@@ -57,8 +57,6 @@ render() {
       </TouchableNativeFeedback>
     );
   }
-
- }
 }
 
 const styles = StyleSheet.create({
@@ -82,7 +80,8 @@ const styles = StyleSheet.create({
     color: '#a4a4a4'
   },
   margins: {
-    padding: 10
+    padding: 10,
+    marginTop: 3
   },
   avatar: {
 

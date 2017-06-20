@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import ProfilePet from '../../scenes/ProfilePet/ProfilePet'
+import ViewProfilePet from '../../scenes/ProfilePet/ViewProfilePet'
 import { updatePet } from '../actions'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -14,17 +14,13 @@ const mapStateToProps = (state, ownProps) => {
       if (pet.id == ownProps.pet.id) {
         return pet
       }
-    }),
-    user: state.auth,
-    pets: state.pets,
-    sizes: state.sizes,
-    races: state.races
+    })
   }
 }
 
-const ProfilePetContainer = connect(
+const ViewProfilePetContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProfilePet)
+)(ViewProfilePet)
 
-export default ProfilePetContainer
+export default ViewProfilePetContainer

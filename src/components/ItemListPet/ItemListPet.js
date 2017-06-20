@@ -41,7 +41,7 @@ render() {
       <TouchableNativeFeedback onPress={goToProfilePet}>
         <View style={styles.pet}>
           <View style={styles.avatar_img}>
-            <Image style={styles.img} source={{uri: this.props.pet.photos[0].thumbnail }} />
+            <Image style={styles.img} source={{uri: this.props.pet.avatar.thumbnail }} />
           </View>
           <View style={styles.margins}>
             <Text style={styles.TitlePet}>{this.props.pet.name}</Text>
