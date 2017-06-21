@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import ViewProfilePet from '../../scenes/ProfilePet/ViewProfilePet'
+import PhotosPet from '../../scenes/PhotosPet/PhotosPet'
 import { updatePet } from '../actions'
 
 const mapDispatchToProps = (dispatch) => ({
@@ -19,9 +19,9 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-const ViewProfilePetContainer = connect(
+const PhotosPetContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(ViewProfilePet)
+)(PhotosPet)
 
-export default ViewProfilePetContainer
+export default PhotosPetContainer

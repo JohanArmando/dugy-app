@@ -72,66 +72,86 @@ export default class Profile extends Component {
                 <View style={styles.content2}>
                   <Image style={styles.avatar} source={{uri: this.props.pet.avatar.thumbnail }}>
                   </Image>
-                  <TouchableNativeFeedback onPress={() => {
-                      this.setState({translucent: false, colorBar: '#1e9284'});
-                      Actions.pop();
-                    }
-                  }>
-                    <View style={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: 40,
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      position: 'absolute',
-                      top: 25,
-                      left: 0
-                    }}>
-                      <IconM name="arrow-back" size={25} color="white" />
-                    </View>
-                  </TouchableNativeFeedback>
                 </View>
               </View>
-              <TouchableNativeFeedback>
-                <View style={[{paddingTop: 30, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
 
-                  <View style={{marginLeft: 10, width: 150}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Raza</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>{this.props.pet.race.name}</Text>
+                <View style={[{alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+
+                  <View style={{padding: 20, width: '50%', borderRightWidth: 1, borderColor: '#EEF6F9'}}>
+                    <Text style={{fontSize: 14, color: '#ccc'}}>Tamaño</Text>
+                    <Text style={{fontSize: 18, color: '#6d6d6d'}}>{this.props.pet.size.name}</Text>
                   </View>
-                  <View style={{marginLeft: 10, width: 100}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Edad</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>{age}</Text>
+                  <View style={{padding: 20, width: '50%'}}>
+                    <Text style={{fontSize: 14, color: '#ccc'}}>Edad</Text>
+                    <Text style={{fontSize: 18, color: '#6d6d6d'}}>{age}</Text>
                   </View>
                 </View>
-              </TouchableNativeFeedback>
-              <TouchableNativeFeedback>
-                <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+                <View style={[{alignItems: 'center', flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
 
-                  <View style={{marginLeft: 10, width: 150}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Genero</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>Macho</Text>
+                  <View style={{padding: 20, width: '50%', borderRightWidth: 1, borderColor: '#EEF6F9'}}>
+                    <Text style={{fontSize: 14, color: '#ccc'}}>Dueño</Text>
+                    <Text style={{fontSize: 18, color: '#6d6d6d'}}>{this.props.user.name} {this.props.user.last_name}</Text>
                   </View>
-                  <View style={{marginLeft: 10, width: 100}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Tamaño</Text>
-                    <Text style={{fontSize: 20, color: '#6d6d6d'}}>{this.props.pet.size.name}</Text>
+                  <View style={{padding: 20, width: '50%'}}>
+                    <Text style={{fontSize: 14, color: '#ccc'}}>Telefono</Text>
+                    <Text style={{fontSize: 18, color: '#6d6d6d'}}>{this.props.user.phone}</Text>
                   </View>
                 </View>
-              </TouchableNativeFeedback>
-              <TouchableNativeFeedback>
                 <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 20,alignItems: 'center', paddingRight: 60, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
                   <View style={{marginLeft: 10, marginRight: 10}}>
-                    <Text style={{fontSize: 16, color: '#ccc'}}>Comentario</Text>
+                    <Text style={{fontSize: 14, color: '#ccc'}}>Comentario</Text>
                     <Text style={{fontSize: 14, color: '#6d6d6d', textAlign: 'justify'}}>{comments}</Text>
                   </View>
-
                 </View>
-              </TouchableNativeFeedback>
+
+                <View style={[{marginLeft: 5, justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>
+                  <View style={{flexDirection: 'row'}}>
+                    <TouchableNativeFeedback onPress={() => Actions.PhotosPet({pet: this.props.pet}) }>
+                      <View style={{
+                        padding: 20,
+                        width: '33%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRightWidth: 1,
+                        borderColor: '#EEF6F9'
+                      }}>
+                        <IconM name="photo-library" size={25} color="#1e9284" />
+                        <Text style={{fontSize: 14, marginTop: 5, color: '#1e9284'}}>Fotos</Text>
+
+                      </View>
+                    </TouchableNativeFeedback>
+                    <TouchableNativeFeedback>
+                      <View style={{
+                        padding: 20,
+                        width: '34%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRightWidth: 1,
+                        borderColor: '#EEF6F9'
+                      }}>
+                        <IconM name="directions-walk" size={25} color="#1e9284" />
+                        <Text style={{fontSize: 14, marginTop: 5, color: '#1e9284'}}>Paseos</Text>
+
+                      </View>
+                    </TouchableNativeFeedback>
+                    <TouchableNativeFeedback>
+                      <View style={{
+                        padding: 20,
+                        width: '33%',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+                        <IconM name="star" size={25} color="#1e9284" />
+                        <Text style={{fontSize: 14, marginTop: 5, color: '#1e9284'}}>Ranking</Text>
+
+                      </View>
+                    </TouchableNativeFeedback>
+                  </View>
+                </View>
 
               <TouchableNativeFeedback onPress={goToViewProfilePet}>
                 <View elevation={10} style={[styles.changeAvatar, utilities.color_primary]}>
-                  <IconM name="edit" size={25} color="white" />
+                  <IconM name="edit" size={26} color="white" />
                 </View>
               </TouchableNativeFeedback>
               <TouchableNativeFeedback>
@@ -168,6 +188,25 @@ export default class Profile extends Component {
 
               </View>
             </ScrollView>
+            <TouchableNativeFeedback onPress={() => {
+                this.setState({translucent: false, colorBar: '#1e9284'});
+                Actions.pop();
+              }
+            }>
+              <View style={{
+                width: '100%',
+                height: 56,
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                paddingLeft: 15
+              }}>
+                <IconM name="arrow-back" size={25} color="white" />
+              </View>
+            </TouchableNativeFeedback>
       </View>
     );
   }

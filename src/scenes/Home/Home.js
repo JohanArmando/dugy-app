@@ -38,7 +38,7 @@ export default class Home extends Component {
     }
   }
   componentWillMount(){
-    getPets()
+    getPets(this.props.user.id)
     .then((data) => {
       this.populatePets(data);
       console.log(data)

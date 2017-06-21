@@ -49,7 +49,7 @@ export default class Home extends Component {
       width: new Animated.Value(0),
       slide: new Animated.Value(-500),
       loading: false,
-      avatarSource: props.pet.photos[0].thumbnail,
+      avatarSource: props.pet.avatar.thumbnail,
       races: [{
         id: 1,
         name: 'ninguna'
@@ -532,7 +532,7 @@ export default class Home extends Component {
               ]
             )}>
               <View elevation={10} style={[styles.changeAvatar, utilities.color_primary]}>
-                <Icon name="add-a-photo" size={25} color="white" />
+                <Icon name="photo-camera" size={25} color="white" />
               </View>
             </TouchableNativeFeedback>
               <View style={[{paddingTop: 15, paddingLeft: 10, paddingBottom: 10,alignItems: 'center', paddingRight: 10, flexDirection: 'row', justifyContent: 'flex-start', borderBottomWidth: 1, borderColor: '#EEF6F9'}]}>

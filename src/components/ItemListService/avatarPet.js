@@ -10,7 +10,7 @@ moment.locale('es');         // es
 export default class AvatarPet extends Component {
 
   render() {
-    const goToProfilePet= () => Actions.ProfilePet({ pet: this.props.pet });
+    const goToProfilePet= () => Actions.ViewProfilePet({ pet: this.props.pet });
     let image = (
       <Text>I</Text>
     );

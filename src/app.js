@@ -14,6 +14,7 @@ import ProfilePet from './redux/containers/ProfilePetContainer';
 import ViewProfilePet from './redux/containers/ViewProfilePetContainer';
 import ServiceDetails from './redux/containers/ServiceDetailsContainer';
 import WalkerProfile from './redux/containers/WalkerProfileContainer';
+import PhotosPet from './redux/containers/PhotosPetContainer';
 import MyDates from './redux/containers/MyDatesContainer';
 import MyDatesHistory from './redux/containers/MyDatesHistoryContainer';
 import CreateWalk from './redux/containers/CreateWalkContainer';
@@ -46,6 +47,7 @@ const Scenes = Actions.create(
     <Scene key="CreateWalk2" component={CreateWalk2}  title="CreateWalk2" hideNavBar='true'/>
     <Scene key="Plans" component={Plans}  title="Plans" hideNavBar='true'/>
     <Scene key="MyDates" component={MyDates}  title="MyDates" hideNavBar='true'/>
+    <Scene key="PhotosPet" component={PhotosPet}  title="PhotosPet" hideNavBar='true'/>
     <Scene key="MyDatesHistory" component={MyDatesHistory}  title="MyDatesHistory" hideNavBar='true'/>
   </Scene>
 );

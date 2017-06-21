@@ -1,8 +1,8 @@
 import axios from './axios'
 
-export function getPets () {
+export function getPets (id) {
   return new Promise((resolve, reject) => {
-    axios.get('/pets')
+    axios.get('/pets?owner=' + id)
     .then(response => {
       resolve(response.data)
     })
@@ -22,11 +22,10 @@ export function storePet (data) {
       race: data.race,
       born_date: data.born_date,
       comments: data.comments,
-      photos: [
-        {
-          avatar: data.avatar
-        }
-      ]
+      avatar: {
+          avatar: data.avatar,
+          name: 'avatar'
+      }
     })
     .then(response => {
       resolve(response.data)
@@ -38,13 +37,56 @@ export function storePet (data) {
   })
 }
 
+export function addPhoto (data) {
+  return new Promise((resolve, reject) => {
+    axios.post('/pets/' + data.id + '/photos', {
+      name: 'photo.png',
+      avatar: data.avatar
+    })
+    .then(response => {
+      console.log("pet",response.data);
+
+      resolve(response.data)
+    })
+    .catch(error => {
+      console.log('error', error.response.data)
+      reject(error)
+    })
+  })
+}
+
 export function updatePet (data) {
-  console.log("data",data);
   return new Promise((resolve, reject) => {
     axios.put('/pets/' + data.id, data)
     .then(response => {
       console.log("pet",response.data);
 
+      resolve(response.data)
+    })
+    .catch(error => {
+      console.log('error', error.response.data)
+      reject(error)
+    })
+  })
+}
+
+export function getPet (id) {
+  return new Promise((resolve, reject) => {
+    axios.get('/pets/' + id)
+    .then(response => {
+      resolve(response.data)
+    })
+    .catch(error => {
+      console.log('error', error.response.data)
+      reject(error)
+    })
+  })
+}
+
+export function deletePhoto (data) {
+  return new Promise((resolve, reject) => {
+    axios.delete('/pets/' + data.petid + '/photos/' + data.photoid)
+    .then(response => {
       resolve(response.data)
     })
     .catch(error => {

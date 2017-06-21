@@ -467,7 +467,7 @@ export default class Home extends Component {
                   <Text style={{marginLeft: 5,fontSize: 16, color: '#ccc'}}>Nombre</Text>
                   <TextInput
                     style={{width: '100%', fontSize: 20, color: '#6d6d6d'}}
-                    onChangeText={(name) => this.setState({name: name.replace(/\b[a-z]/g,function(f){return f.toUpperCase();})})}
+                    onChangeText={(name) => this.setState({name: name})}
                     value={this.state.name}
                     placeholder="Ingresar nombre"
                     placeholderTextColor="#ccc"
