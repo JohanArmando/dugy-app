@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ListView,
   Image,
-  ToolbarAndroid
+  ToolbarAndroid,
+  TouchableNativeFeedback
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -45,17 +46,30 @@ export default class PlanIndex extends Component {
   }
   renderList(item){
     return(
-      <View style={styles.backContainer}>
+      <View elevation={2} style={{ margin: 5, marginBottom: 0, borderWidth: 1, borderColor: 'rgba(0,0,0,0.1)'}}>
         <Image
-          source={{uri: item.logo.thumbnail}}
-          style={styles.planContainer}
+          source={{uri: item.logo.original}}
+          style={{ width: '100%', height: 150, resizeMode: 'stretch'}}
           >
-          <View style={styles.planTextContainer} >
-            <Text style={styles.planTextPrice}>{this.copFormat(item.price)}</Text>
-            <Text style={styles.planTextTitle}>{item.name}</Text>
-            <Text style={styles.planTextSubTitle}>({item.expiration_days} paseos en total)</Text>
-          </View>
+
         </Image>
+        <View style={{margin: 20}} >
+          <Text style={{fontSize: 22, color: '#1e9284', fontWeight: '100'}}>{item.name.toUpperCase()}</Text>
+          <View style={{marginTop: 5, flexDirection: 'row'}}>
+            <Text style={{color: '#1e9284'}}><Text style={{fontSize: 36, fontWeight: 'bold'}}>${item.price}</Text><Text style={{fontSize: 18}}> / mensual</Text></Text>
+          </View>
+        </View>
+        <View style={{paddingLeft: 20, paddingRight: 20, paddingBottom: 20, borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.1)' }}>
+          <Text style={{fontSize: 18, marginTop: 15}}><Text style={{fontWeight: 'bold'}}>{item.expiration_days}</Text> paseos mensuales</Text>
+
+          <View style={{justifyContent: 'center', marginTop: 15}}>
+            <TouchableNativeFeedback onPress={() => { Actions.MethodPays({plan: item})}}>
+              <View elevation={2} style={{backgroundColor: '#1e9284',justifyContent: 'center', alignItems: 'center', height: 35, width: 130, borderRadius: 5}}>
+                <Text style={{color: 'white', fontSize: 16}}>COMPRAR</Text>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
+        </View>
       </View>
       )
   }
@@ -78,20 +92,25 @@ export default class PlanIndex extends Component {
     } else {
       content = (
         <ListView
+          contentContainerStyle={
+            {
+              paddingBottom: 10
+            }
+          }
           dataSource={this.state.plans}
           renderRow={this.renderList.bind(this)}
         />
       );
     }
     return(
-      <View style={[utilities.pb_lg,{flex: 1}]}>
+      <View style={[{flex: 1}]}>
         <Icon.ToolbarAndroid
           style={utilities.toolbar}
           title="Planes"
           titleColor="white"
           navIconName="arrow-back"
           onIconClicked={Actions.pop}
-          elevation={1}
+          elevation={2}
         />
         { content }
       </View>

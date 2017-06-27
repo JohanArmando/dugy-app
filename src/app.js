@@ -9,6 +9,7 @@ import MyPets from './redux/containers/MyPetsContainer';
 import CreatePet from './redux/containers/CreatePetContainer';
 import Profile from './redux/containers/ProfileContainer';
 import Pays from './redux/containers/PaysContainer';
+import MethodPays from './redux/containers/MethodPaysContainer';
 import EditProfile from './redux/containers/EditProfileContainer';
 import ProfilePet from './redux/containers/ProfilePetContainer';
 import ViewProfilePet from './redux/containers/ViewProfilePetContainer';
@@ -36,6 +37,7 @@ const Scenes = Actions.create(
     <Scene key="Home" component={Home}  title="Home" hideNavBar='true'/>
     <Scene key="MyPets" component={MyPets}  title="MyPets" hideNavBar='true'/>
     <Scene key="Pays" component={Pays}  title="Pays" hideNavBar='true'/>
+    <Scene key="MethodPays" component={MethodPays}  title="MethodPays" hideNavBar='true'/>
     <Scene key="CreatePet" component={CreatePet}  title="CreatePet" hideNavBar='true'/>
     <Scene key="Profile" component={Profile}  title="Profile" hideNavBar='true'/>
     <Scene key="EditProfile" component={EditProfile}  title="EditProfile" hideNavBar='true'/>
