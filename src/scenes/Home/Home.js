@@ -41,7 +41,6 @@ export default class Home extends Component {
     getPets(this.props.user.id)
     .then((data) => {
       this.populatePets(data);
-      console.log(data)
     })
     .catch(data => {
       console.log(data)
@@ -49,7 +48,6 @@ export default class Home extends Component {
     getSizes()
     .then((data) => {
       this.populateSizes(data);
-      console.log(data)
     })
     .catch(data => {
       console.log(data)
@@ -57,7 +55,6 @@ export default class Home extends Component {
     getRaces()
     .then((data) => {
       this.populateRaces(data);
-      console.log(data)
     })
     .catch(data => {
       console.log(data)
@@ -65,7 +62,6 @@ export default class Home extends Component {
     getPlans()
     .then((data) => {
       this.populatePlans(data);
-      console.log(data)
     })
     .catch(data => {
       console.log(data)
@@ -74,7 +70,6 @@ export default class Home extends Component {
     .then((data) => {
       this.setState({loadingServices: false});
       this.populateServices(data);
-      console.log('services ',data)
     })
     .catch(data => {
       console.log(data)

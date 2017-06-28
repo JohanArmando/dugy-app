@@ -68,14 +68,20 @@ export default class Home extends Component {
           </TouchableNativeFeedback>
           <TouchableNativeFeedback onPress={this.goToHistory.bind(this)}>
             <View style={[styles.menuItem]}>
-              <Icon name="map" size={30} color="gray" />
+              <Icon name="list" size={30} color="gray" />
               <Text style={utilities.ml} >Historial de paseos</Text>
             </View>
           </TouchableNativeFeedback>
           <TouchableNativeFeedback onPress={this.goToPays.bind(this)}>
             <View style={styles.menuItem}>
               <Icon name="payment" size={30} color="gray" />
-              <Text style={utilities.ml} >Pagos</Text>
+              <Text style={utilities.ml} >Mi suscripciones</Text>
+            </View>
+          </TouchableNativeFeedback>
+          <TouchableNativeFeedback onPress={this.goToPlans.bind(this)}>
+            <View style={styles.menuItem}>
+              <Icon name="dashboard" size={30} color="gray" />
+              <Text style={utilities.ml} >Planes</Text>
             </View>
           </TouchableNativeFeedback>
 
@@ -131,5 +137,11 @@ export default class Home extends Component {
   goToPays () {
     this.props.close();
     Actions.Pays();
+  }
+
+
+  goToPlans () {
+    this.props.close();
+    Actions.Plans();
   }
 }

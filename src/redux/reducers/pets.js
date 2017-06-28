@@ -9,7 +9,6 @@ const pets = (state = [], action) => {
         }
         return pet
       })
-      console.log(pets, state);
       return pets;
     case 'ADD_PET':
       return [

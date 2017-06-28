@@ -23,17 +23,13 @@ export default class Welcome extends Component {
       if (value != null) {
         session(value)
         .then((data) => {
-          console.log('login 1')
           this.login(data.user);
           Actions.Home({type: 'reset'});
         })
         .catch(data => {
-          console.log('login 2')
-
           this.setState({ loading: false });
         });
       } else  {
-        console.log('login 3')
         this.setState({ loading: false });
       }
     })

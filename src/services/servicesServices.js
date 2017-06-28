@@ -2,7 +2,6 @@ import axios from './axios'
 import moment from 'moment';
 
 export function getServices (id) {
-  console.log(moment.utc().format());
   return new Promise((resolve, reject) => {
     axios.get('/services?where={"client":"'+id+'","date":{">":"' + moment.utc().format() + '"}}&sort=date%20ASC')
     .then(response => {
@@ -16,7 +15,6 @@ export function getServices (id) {
 }
 
 export function getServicesHistory (id) {
-  console.log(id);
   return new Promise((resolve, reject) => {
     axios.get('/services?where={"client":"'+id+'","date":{"<":"' + moment.utc().format() + '"}}&sort=date%20DESC')
     .then(response => {

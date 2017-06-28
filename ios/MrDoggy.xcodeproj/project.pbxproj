@@ -50,6 +50,7 @@
 		C08D500C8784430B9B876EF3 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A881F28C9DA94E5EB90614A4 /* libRNImagePicker.a */; };
 		7DD15F4AB55D4C32BD824BCE /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AD0F8F3BAB14AA9A870FD14 /* libimageCropPicker.a */; };
 		06D2EADFCFB445C3B483106A /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C23822E85F4BFA826F54D6 /* libAirMaps.a */; };
+		CB25CEC1312E49A2A6641A33 /* libCheckoutMercadoPagoModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B86F8242D984F1B8A9C448C /* libCheckoutMercadoPagoModule.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -289,6 +290,8 @@
 		9AD0F8F3BAB14AA9A870FD14 /* libimageCropPicker.a */ = {isa = PBXFileReference; name = "libimageCropPicker.a"; path = "libimageCropPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		50A6BF7CE23E439B9BFA39B1 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; name = "AirMaps.xcodeproj"; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		B3C23822E85F4BFA826F54D6 /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		9866ECB4F75C447E8E21EA98 /* CheckoutMercadoPagoModule.xcodeproj */ = {isa = PBXFileReference; name = "CheckoutMercadoPagoModule.xcodeproj"; path = "../node_modules/react-native-checkout-mercadopago/ios/CheckoutMercadoPagoModule.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		2B86F8242D984F1B8A9C448C /* libCheckoutMercadoPagoModule.a */ = {isa = PBXFileReference; name = "libCheckoutMercadoPagoModule.a"; path = "libCheckoutMercadoPagoModule.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -320,6 +323,7 @@
 				C08D500C8784430B9B876EF3 /* libRNImagePicker.a in Frameworks */,
 				7DD15F4AB55D4C32BD824BCE /* libimageCropPicker.a in Frameworks */,
 				06D2EADFCFB445C3B483106A /* libAirMaps.a in Frameworks */,
+				CB25CEC1312E49A2A6641A33 /* libCheckoutMercadoPagoModule.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,6 +495,7 @@
 				E3863EF0E04844069BDC3A33 /* RNImagePicker.xcodeproj */,
 				930FCAD9FE5649CBBF648DF7 /* imageCropPicker.xcodeproj */,
 				50A6BF7CE23E439B9BFA39B1 /* AirMaps.xcodeproj */,
+				9866ECB4F75C447E8E21EA98 /* CheckoutMercadoPagoModule.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1052,6 +1057,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1060,6 +1066,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-checkout-mercadopago/ios",
 				);
 			};
 			name = Debug;
@@ -1085,6 +1092,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1093,6 +1101,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-checkout-mercadopago/ios",
 				);
 			};
 			name = Release;
@@ -1119,6 +1128,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-checkout-mercadopago/ios",
 				);
 			};
 			name = Debug;
@@ -1144,6 +1154,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-checkout-mercadopago/ios",
 				);
 			};
 			name = Release;
@@ -1178,6 +1189,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1186,6 +1198,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-checkout-mercadopago/ios",
 				);
 			};
 			name = Debug;
@@ -1220,6 +1233,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1228,6 +1242,7 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-maps/lib/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-checkout-mercadopago/ios",
 				);
 			};
 			name = Release;
@@ -1257,6 +1272,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1281,6 +1297,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

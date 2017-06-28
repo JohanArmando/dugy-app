@@ -4,7 +4,6 @@ import Welcome from '../../scenes/Welcome/Welcome'
 
 const mapDispatchToProps = (dispatch) => ({
   doLogin: (user) => {
-    console.log(login(user));
     dispatch(login(user));
   }
 })

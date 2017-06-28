@@ -11,7 +11,6 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 var utilities = require('../../assets/css/utilities');
-var co2 = require('../../services/2co');
 export default class PlanIndex extends Component {
   constructor() {
     super();
@@ -33,32 +32,18 @@ export default class PlanIndex extends Component {
   createToken(){
     console.log(this.state)
     var args = {
-        sellerId: "901341507",
-        publishableKey: "07502CA5-F830-47C6-90DC-E28CB26679BF",
-        ccNo: this.state.credit_card.split(' ').join(''),
-        cvv: this.state.cvc,
-        expMonth: this.state.days_expired.split('/')[0].trim(),
-        expYear: this.state.days_expired.split('/')[1].trim()
+        // sellerId: "901341507",
+        // publishableKey: "07502CA5-F830-47C6-90DC-E28CB26679BF",
+        // ccNo: this.state.credit_card.split(' ').join(''),
+        // cvv: this.state.cvc,
+        // expMonth: this.state.days_expired.split('/')[0].trim(),
+        // expYear: this.state.days_expired.split('/')[1].trim()
         /*ccNo: '4000000000000002',
          cvv: '123',
          expMonth: '02',
          expYear:'20'*/
     };
-    // TCO.requestToken(
-    //   data => {
-    //
-    //     console.log(data.response.token.token);
-    //
-    //   },
-    //   data => {
-    //     if (data.errorCode === 200) {
-    //     } else {
-    //         console.log(data.errorMsg);
-    //     }
-    //   },
-    //   args
-    // );
-    console.log(co2);
+
 
   }
 
@@ -269,7 +254,7 @@ export default class PlanIndex extends Component {
           </View>
           <View style={{borderTopWidth: 1, borderColor: 'rgba(0,0,0,0.2)' }}>
             <TouchableNativeFeedback onPress={ this.createToken.bind(this) }>
-              <View style={{flexDirection: 'row', margin: 5}}>
+              <View style={{flexDirection: 'row', margin: 20}}>
                 <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#1e9284', borderRadius: 5, justifyContent: 'center', paddingLeft: 20, padding: 10, alignItems: 'center'}}>
                   <Icon name="payment" size={24} color="white" />
                   <Text style={{marginLeft: 15, paddingRight: 50, fontSize: 16, color: 'white', fontWeight: 'bold'}}>Pagar</Text>

@@ -4,7 +4,6 @@ import Login from '../../scenes/Login/Login'
 
 const mapDispatchToProps = (dispatch) => ({
   doLogin: (user) => {
-    console.log(login(user));
     dispatch(login(user));
   }
 })
