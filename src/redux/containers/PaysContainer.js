@@ -13,6 +13,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    plans: state.plans,
     user: state.auth
   }
 }
